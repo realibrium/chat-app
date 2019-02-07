@@ -4,7 +4,7 @@
 //####################################################################
 //####################################################################
 
-// Load the internal NodeJS Path library
+// Load the built-in NodeJS Path library
 // Node Docs page: https://nodejs.org/dist/latest-v10.x/docs/api/path.html
 const path = require('path');
 
@@ -32,7 +32,6 @@ var express = require('express');
 //####################################################################
 //####################################################################
 
-
 // Load the mongoose from exports from ./db/mongoose.js
 // var {mongosse} = require('./db/mongoose.js');
 
@@ -58,10 +57,10 @@ console.log(`publicPath: ${publicPath}`);
 //Declare the port for use in both localHost and Heroku
 const port = process.env.PORT || 3000;
 
-//Declare the app
+//Declare the app t9 create routes with Express
 var app = express();
 
-// serve the static page index.html
+// serve the static page index.html, located in the public folder
 app.use(express.static(publicPath));
 
 
@@ -75,7 +74,7 @@ app.use(express.static(publicPath));
 //####################################################################
 //####################################################################
 app.listen(port, () => {
-  console.log(`Server started on port: ${port}`);
+  console.log(`Server Realibrium started on port: ${port}`);
 });
 //####################################################################
 //####################################################################
