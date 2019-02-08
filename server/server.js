@@ -97,28 +97,41 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
+
+
   // #####################################################################
-  // Emit Custom Event, 'newMessage', from Server to Client and include Data via an Object
-  // socket.emit('newMessage', {
-  //   from: 'Michael',
-  //   text: 'Hello, can you meet me',
-  //   createdAt: 123456
-  // });
+  // Emit Custom Event, 'newMessage', from Admin from the Server to Client and include Data via an Object
+  socket.emit('newMessage', {
+    from: 'Admin',
+    text: 'Welcome to the Chat App',
+    createdAt: new Date().getTime()
+  });
+
+  //broadcast.emit Custom Event 'newMessage' to all connections, except for the sender, that a new User joined the chat
+  socket.broadcast.emit('newMessage', {
+    from: 'Admin',
+    text: 'New User Joined the Chat',
+    createdAt: new Date().getTime()
+  });
 
   // #####################################################################
   // Listen for Custom Event, 'createMessage', from Client to Server
   // The data object from the Client will be the first argument of the function
   socket.on('createMessage', (createMessageData) => {
     console.log('Server Received createMessageData', createMessageData);
-
-    //Emit Custom Event 'newMessage' to all connections with the 'createMessage'
-    // that the Server just received from the Client
     io.emit('newMessage', {
       from: createMessageData.from,
       text: createMessageData.text,
       createdAt: new Date().getTime()
     });
 
+    //broadcast.emit Custom Event 'newMessage' to all connections, except for the sender, with the 'createMessage'
+    // that the Server just received from the Client
+    // socket.broadcast.emit('newMessage', {
+    //   from: createMessageData.from,
+    //   text: createMessageData.text,
+    //   createdAt: new Date().getTime()
+    // });
   });
 
   // #####################################################################
