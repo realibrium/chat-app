@@ -93,37 +93,49 @@ var io = socketIO(server);
 // serve the static page index.html, located in the public folder
 app.use(express.static(publicPath));
 
+//####################################################################
+//####################################################################
+// End: Create Web Server and Static Pages
+//####################################################################
+//####################################################################
+
+//####################################################################
+//####################################################################
+// Begin: Messaging with socketIO
 // Call method io.on which let's us register an event listener:
 // the 'connection' in this case, is the event. It let's us listen for the event via the socket
+//####################################################################
+//####################################################################
 
+// #####################################################################
 //Event: 'connection' on the socket io server
 io.on('connection', (socket) => {
   console.log('New User Connected');
-
-
 
   // #####################################################################
   // Emit Custom Event, 'newMessage', from Admin from the Server to Client and include Data via an Object
   socket.emit('newMessage', generateMessage('Admin', 'Welcome to the Chat App'));
 
+  // #####################################################################
   //broadcast.emit Custom Event 'newMessage' to all connections, except for the sender, that a new User joined the chat
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User Joined the Chat'));
-
 
   // #####################################################################
   // Listen for Custom Event, 'createMessage', from Client to Server
   // The data object from the Client will be the first argument of the function
-  socket.on('createMessage', (createMessageData) => {
+  // Add acknowledgement to the message received from the Client
+  // Need to add a second argument, acknowledgeCallBack function, to the arrow function
+  socket.on('createMessage', (createMessageData, acknowledgeCallBack) => {
     console.log('Server Received createMessageData', createMessageData);
     io.emit('newMessage', generateMessage(createMessageData.from, createMessageData.text));
 
-    //broadcast.emit Custom Event 'newMessage' to all connections, except for the sender, with the 'createMessage'
-    // that the Server just received from the Client
-    // socket.broadcast.emit('newMessage', {
-    //   from: createMessageData.from,
-    //   text: createMessageData.text,
-    //   createdAt: new Date().getTime()
-    // });
+    //This will call the function specified in the socket.emit on the client. We can send data as
+    // an argument to the the acknowledgeCallBack function. It can be any data type. In this case
+    // we are returning an object
+    acknowledgeCallBack( {
+      subject: 'Message Acknowledgement',
+      text: 'This is the acknowledgement from the server'
+    });
   });
 
   // #####################################################################
@@ -131,12 +143,11 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('User Was Disconnected');
   });
-
 });
 
 //####################################################################
 //####################################################################
-// End: Create Web Server and Static Pages
+// End: Messaging with socketIO
 //####################################################################
 //####################################################################
 

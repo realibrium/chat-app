@@ -6,21 +6,26 @@
   </head>
   <body>
     <p>Welcome to the New Chat Application</p>
+    <!-- Ordered List to Render Messages -->
+    <ol id="message-list">
+    </ol>
+    <form id="message-form">
+      <input type="text" name="message" placeholder="Message">
+      <button>Send</button>
+    </form>
 
     <!-- ##################################################################### -->
     <!-- Begin: Load socket.io.js -->
     <!-- ##################################################################### -->
     <script src="/socket.io/socket.io.js"></script>
     <!-- ##################################################################### -->
-    <!-- End: Load socket.io.js -->
+    <!-- Begin: Load jquery-3.3.1.min.js -->
     <!-- ##################################################################### -->
-
+    <script src="/js/libs/jquery-3.3.1.min.js"></script>
     <!-- ##################################################################### -->
     <!-- Begin: Script to establish messaging between server & client -->
     <!-- ##################################################################### -->
     <script src="/js/index.js"></script>
-    <!-- ##################################################################### -->
-    <!-- End: Script to establish messaging between server & client -->
-    <!-- ##################################################################### -->
+
   </body>
 </html>
