@@ -99,17 +99,26 @@ io.on('connection', (socket) => {
 
   // #####################################################################
   // Emit Custom Event, 'newMessage', from Server to Client and include Data via an Object
-  socket.emit('newMessage', {
-    from: 'Michael',
-    text: 'Hello, can you meet me',
-    createdAt: 123456
-  });
+  // socket.emit('newMessage', {
+  //   from: 'Michael',
+  //   text: 'Hello, can you meet me',
+  //   createdAt: 123456
+  // });
 
   // #####################################################################
   // Listen for Custom Event, 'createMessage', from Client to Server
   // The data object from the Client will be the first argument of the function
   socket.on('createMessage', (createMessageData) => {
     console.log('Server Received createMessageData', createMessageData);
+
+    //Emit Custom Event 'newMessage' to all connections with the 'createMessage'
+    // that the Server just received from the Client
+    io.emit('newMessage', {
+      from: createMessageData.from,
+      text: createMessageData.text,
+      createdAt: new Date().getTime()
+    });
+
   });
 
   // #####################################################################

@@ -13,10 +13,10 @@ socket.on('connect', function () {
 
   // #####################################################################
   // Emit Custom Event, 'createMessage', from Client to Server and include Data via an Object
-  socket.emit('createMessage', {
-    from: 'Ronald',
-    text: 'Sure we can meet at 7pm'
-  });
+  // socket.emit('createMessage', {
+  //   from: 'Ronald',
+  //   text: 'Sure we can meet at 7pm'
+  // });
 
 });
 
