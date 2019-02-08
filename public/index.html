@@ -7,18 +7,20 @@
   <body>
     <p>Welcome to the New Chat Application</p>
 
+    <!-- ##################################################################### -->
+    <!-- Begin: Load socket.io.js -->
+    <!-- ##################################################################### -->
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-      // Call io()
-      var socket = io();
+    <!-- ##################################################################### -->
+    <!-- End: Load socket.io.js -->
+    <!-- ##################################################################### -->
 
-      socket.on('connect', () => {
-        console.log('Connected to Server');
-      });
-
-      socket.on('disconnect', () => {
-        console.log('Disconnected from Server');
-      })
-    </script>
+    <!-- ##################################################################### -->
+    <!-- Begin: Script to establish messaging between server & client -->
+    <!-- ##################################################################### -->
+    <script src="/js/index.js"></script>
+    <!-- ##################################################################### -->
+    <!-- End: Script to establish messaging between server & client -->
+    <!-- ##################################################################### -->
   </body>
 </html>

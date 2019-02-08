@@ -11,7 +11,6 @@ const path = require('path');
 // Load the http library
 const http = require('http');
 
-
 //####################################################################
 //####################################################################
 // End: Load Built-in NMP Modules
@@ -66,12 +65,12 @@ const socketIO = require('socket.io');
 //####################################################################
 //####################################################################
 
-
 //####################################################################
 //####################################################################
 // Begin: Create Web Server and Static Pages
 //####################################################################
 //####################################################################
+
 // Declare the path where the index.html is located
 const publicPath = path.join(__dirname, '../public');
 console.log(`publicPath: ${publicPath}`);
@@ -91,15 +90,35 @@ var io = socketIO(server);
 // serve the static page index.html, located in the public folder
 app.use(express.static(publicPath));
 
-// Call method io.on which let's us register an event listener: connection in this case, is the even. It let's you listen for the even vi socket
+// Call method io.on which let's us register an event listener:
+// the 'connection' in this case, is the event. It let's us listen for the event via the socket
+
+//Event: 'connection' on the socket io server
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
+  // #####################################################################
+  // Emit Custom Event, 'newMessage', from Server to Client and include Data via an Object
+  socket.emit('newMessage', {
+    from: 'Michael',
+    text: 'Hello, can you meet me',
+    createdAt: 123456
+  });
+
+  // #####################################################################
+  // Listen for Custom Event, 'createMessage', from Client to Server
+  // The data object from the Client will be the first argument of the function
+  socket.on('createMessage', (createMessageData) => {
+    console.log('Server Received createMessageData', createMessageData);
+  });
+
+  // #####################################################################
+  //Event: 'disconnect' on the socket io server
   socket.on('disconnect', () => {
     console.log('User Was Disconnected');
   });
-});
 
+});
 
 //####################################################################
 //####################################################################
