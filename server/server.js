@@ -59,6 +59,9 @@ const socketIO = require('socket.io');
 // Load the User  model
 // var {User} = require('./models/user.js');
 
+// Load  ./utils/message.js
+const {generateMessage} = require('./utils/message.js');
+
 //####################################################################
 //####################################################################
 // End: Load Project Methods
@@ -101,29 +104,18 @@ io.on('connection', (socket) => {
 
   // #####################################################################
   // Emit Custom Event, 'newMessage', from Admin from the Server to Client and include Data via an Object
-  socket.emit('newMessage', {
-    from: 'Admin',
-    text: 'Welcome to the Chat App',
-    createdAt: new Date().getTime()
-  });
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the Chat App'));
 
   //broadcast.emit Custom Event 'newMessage' to all connections, except for the sender, that a new User joined the chat
-  socket.broadcast.emit('newMessage', {
-    from: 'Admin',
-    text: 'New User Joined the Chat',
-    createdAt: new Date().getTime()
-  });
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User Joined the Chat'));
+
 
   // #####################################################################
   // Listen for Custom Event, 'createMessage', from Client to Server
   // The data object from the Client will be the first argument of the function
   socket.on('createMessage', (createMessageData) => {
     console.log('Server Received createMessageData', createMessageData);
-    io.emit('newMessage', {
-      from: createMessageData.from,
-      text: createMessageData.text,
-      createdAt: new Date().getTime()
-    });
+    io.emit('newMessage', generateMessage(createMessageData.from, createMessageData.text));
 
     //broadcast.emit Custom Event 'newMessage' to all connections, except for the sender, with the 'createMessage'
     // that the Server just received from the Client
