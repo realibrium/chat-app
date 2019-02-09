@@ -2,19 +2,38 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+
+    <!-- Add CSS Styles -->
+    <link rel="stylesheet" href="/css/styles.css">
+
     <title>Chat App</title>
   </head>
-  <body>
-    <p>Welcome to the New Chat Application</p>
-    <!-- Ordered List to Render Messages -->
-    <ol id="message-list">
-    </ol>
-    <form id="message-form">
-      <input type="text" name="message" placeholder="Message">
-      <button>Send</button>
-    </form>
+  <body class="chat">
+    <div class="chat__sidebar">
+      <h3>People</h3>
+      <div id="users">
 
-    <button id="send-location">Send Location</button>
+      </div>
+    </div>
+
+    <div class="chat__main">
+      <!-- Ordered List to Render Messages -->
+      <ol id="message-list" class="chat__messages">
+      </ol>
+
+      <div class="chat__footer">
+        <form id="message-form">
+          <!-- set autofocus on and autocomplete off -->
+          <input type="text" name="message" placeholder="Enter message here" autofocus autocomplete="off">
+          <button>Send</button>
+        </form>
+
+        <button id="send-location">Send Location</button>
+      </div>
+
+    </div>
+
+
 
     <!-- ##################################################################### -->
     <!-- Begin: Load socket.io.js -->

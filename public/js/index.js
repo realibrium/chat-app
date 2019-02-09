@@ -50,7 +50,7 @@ socket.on('newLocationMessage', function (newLocationMessageData) {
 
 
 // #####################################################################
-//Use jQuery to select the form with id=message-form
+//Event Listener: Use jQuery to select the form with id=message-form
 // use formEvent.preventDefault(); to prevent the form from sending a query string
 //Create an event listener with the .on and listen for 'submit'
 // Adding function to acknowledge and Emit from the server.
@@ -58,15 +58,21 @@ socket.on('newLocationMessage', function (newLocationMessageData) {
 // use cal back function so that the server may return data with an acknowledgement
 // that it received the message. In this case it returns the data in
 //the variable dataAckFromServer
-jQuery('#message-form').on('submit', function (formEvent) {
+var messageForm = jQuery('#message-form');
+
+messageForm.on('submit', function (formEvent) {
   formEvent.preventDefault();
 
   //Create an emit with createMessage
+  var messageTextbox = jQuery('[name=message]');
   socket.emit('createMessage', {
     from: 'User',
-    text: jQuery('[name=message]').val()
+    text: messageTextbox.val() //Select the input element with the name="message"
   }, function (dataAckFromServer) {
-    console.log('The data acknowledgement from the Server is: ', dataAckFromServer);
+    console.log('', dataAckFromServer);
+
+    //Clear the input text
+    text: messageTextbox.val('');
   });
 });
 
@@ -80,20 +86,36 @@ locationButton.on('click', function () {
     return alert('Geolocation not supported by your browser!');
   }
 
+  //Disable locationButton while sending the location info
+  locationButton.attr('disabled', 'disabled');
+
+  //Inform the user by changing the text in the locationButton
+  locationButton.text('Sending location ...');
+
   //If geolocation is supported then:
   //Use the getCurrentPosition function.
   //It takes two functions:
   // 1) The success function that will handle the position data and actions
   // 2) The error function that will handle the error data and actions
   navigator.geolocation.getCurrentPosition(function (position) {
+    //Enable locationButton when the getCurrentPosition returns
+    locationButton.removeAttr('disabled');
+    //Restore original text in the locationButton
+    locationButton.text('Send Location');
+
     //Emit message with current position coordinates
     socket.emit('createLocationMessage', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
-    })
+    });
   }, function (error) {
-    alert('Unable to fetch location. Error: ', error);
-  });
+      //Enable locationButton when the getCurrentPosition returns
+      locationButton.removeAttr('disabled');
+      //Restore original text in the locationButton
+      locationButton.text('Send Location');
+
+      alert('Unable to fetch location. Error: ', error);
+    });
 });
 
 // #####################################################################

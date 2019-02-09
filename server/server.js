@@ -133,10 +133,7 @@ io.on('connection', (socket) => {
     //This will call the function specified in the socket.emit on the client. We can send data as
     // an argument to the the acknowledgeCallBack function. It can be any data type. In this case
     // we are returning an object
-    acknowledgeCallBack( {
-      subject: 'Message Acknowledgement',
-      text: 'This is the acknowledgement from the server'
-    });
+    acknowledgeCallBack();
   });
 
   // #####################################################################
