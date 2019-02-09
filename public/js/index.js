@@ -25,12 +25,29 @@ socket.on('newMessage', function (newMessageData) {
 
   //Add the incoming messages from the server and add them to the message list
   //Build the li from and text
-  var newMessageItem = jQuery('<li></li>');
-  newMessageItem.text(`${newMessageData.from}: ${newMessageData.text}`);
+  var newListItem = jQuery('<li></li>');
+  newListItem.text(`${newMessageData.from}: ${newMessageData.text}`);
 
   //Append the message to the ordered list ol id="message-list"
-  jQuery('#message-list').append(newMessageItem);
+  jQuery('#message-list').append(newListItem);
 });
+
+// #####################################################################
+// Listen for Custom Event: 'newLocationMessage'
+socket.on('newLocationMessage', function (newLocationMessageData) {
+  //Generate the DOM elements
+  var newListItem = jQuery('<li></li>');
+  var anchorTag = jQuery('<a target="_blank">My Current Location</a>');
+
+  newListItem.text(`${newLocationMessageData.from}: `);
+  anchorTag.attr('href', newLocationMessageData.url);
+  newListItem.append(anchorTag);
+
+  //Append the message to the ordered list ol id="message-list"
+  jQuery('#message-list').append(newListItem);
+
+});
+
 
 // #####################################################################
 //Use jQuery to select the form with id=message-form
@@ -50,6 +67,32 @@ jQuery('#message-form').on('submit', function (formEvent) {
     text: jQuery('[name=message]').val()
   }, function (dataAckFromServer) {
     console.log('The data acknowledgement from the Server is: ', dataAckFromServer);
+  });
+});
+
+//Send Geolocation info to the server
+var locationButton = jQuery('#send-location');
+
+//Declare a event listener 'click'
+locationButton.on('click', function () {
+  //If geolocation is not supported supported then alert
+  if (!navigator.geolocation) {
+    return alert('Geolocation not supported by your browser!');
+  }
+
+  //If geolocation is supported then:
+  //Use the getCurrentPosition function.
+  //It takes two functions:
+  // 1) The success function that will handle the position data and actions
+  // 2) The error function that will handle the error data and actions
+  navigator.geolocation.getCurrentPosition(function (position) {
+    //Emit message with current position coordinates
+    socket.emit('createLocationMessage', {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    })
+  }, function (error) {
+    alert('Unable to fetch location. Error: ', error);
   });
 });
 

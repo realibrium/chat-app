@@ -60,7 +60,7 @@ const socketIO = require('socket.io');
 // var {User} = require('./models/user.js');
 
 // Load  ./utils/message.js
-const {generateMessage} = require('./utils/message.js');
+const {generateMessage, generateLocationMessage} = require('./utils/message.js');
 
 //####################################################################
 //####################################################################
@@ -121,12 +121,13 @@ io.on('connection', (socket) => {
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User Joined the Chat'));
 
   // #####################################################################
-  // Listen for Custom Event, 'createMessage', from Client to Server
+  // Event: 'createMessage': Listen for Custom Event, 'createMessage', from Client to Server
   // The data object from the Client will be the first argument of the function
   // Add acknowledgement to the message received from the Client
   // Need to add a second argument, acknowledgeCallBack function, to the arrow function
   socket.on('createMessage', (createMessageData, acknowledgeCallBack) => {
     console.log('Server Received createMessageData', createMessageData);
+
     io.emit('newMessage', generateMessage(createMessageData.from, createMessageData.text));
 
     //This will call the function specified in the socket.emit on the client. We can send data as
@@ -136,6 +137,15 @@ io.on('connection', (socket) => {
       subject: 'Message Acknowledgement',
       text: 'This is the acknowledgement from the server'
     });
+  });
+
+  // #####################################################################
+  // Listen for Custom Event: 'createLocationMessage'
+  // Emit 'newLocationMessage'
+  // Use function generateLocationMessage to create data with the url format:
+  // www.google.com/maps?q=30.202915299999997,-97.8614147
+  socket.on('createLocationMessage', (coordinates) => {
+    io.emit('newLocationMessage', generateLocationMessage('Admin', coordinates.latitude, coordinates.longitude));
   });
 
   // #####################################################################
