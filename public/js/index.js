@@ -23,10 +23,13 @@ socket.on('disconnect', function () {
 socket.on('newMessage', function (newMessageData) {
   console.log('Got New Message from Server', newMessageData);
 
+  //Define variable that contains the date created at formated with moment
+  var formattedTime = moment(newMessageData.createdAt).format('h:mm a');
+
   //Add the incoming messages from the server and add them to the message list
   //Build the li from and text
   var newListItem = jQuery('<li></li>');
-  newListItem.text(`${newMessageData.from}: ${newMessageData.text}`);
+  newListItem.text(`${newMessageData.from} ${formattedTime}: ${newMessageData.text}`);
 
   //Append the message to the ordered list ol id="message-list"
   jQuery('#message-list').append(newListItem);
@@ -39,7 +42,10 @@ socket.on('newLocationMessage', function (newLocationMessageData) {
   var newListItem = jQuery('<li></li>');
   var anchorTag = jQuery('<a target="_blank">My Current Location</a>');
 
-  newListItem.text(`${newLocationMessageData.from}: `);
+  //Define variable that contains the date created at formated with moment
+  var formattedTime = moment(newLocationMessageData.createdAt).format('h:mm a');
+
+  newListItem.text(`${newLocationMessageData.from}  ${formattedTime}: `);
   anchorTag.attr('href', newLocationMessageData.url);
   newListItem.append(anchorTag);
 
